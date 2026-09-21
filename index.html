@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Sorteador de Números | ADTAG Avenida P1</title>
+  <meta name="description" content="Sorteador de números da ADTAG Avenida P1 para eventos, cultos, campanhas e rifas.">
+  <meta name="theme-color" content="#0b1630">
+  <link rel="icon" href="images/favicon.ico" type="image/png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="cabecalho">
+    <!-- Para trocar a logo, substitua o arquivo images/logo.png -->
+    <img id="logo" class="cabecalho__logo" src="images/logo_adtag.png" alt="Logo da ADTAG Avenida P1" width="80" height="80">
+    <span id="logoFallback" class="cabecalho__logo cabecalho__logo--fallback" aria-hidden="true" hidden>P1</span>
+    <p class="cabecalho__igreja">ADTAG Avenida P1</p>
+    <h1 class="cabecalho__titulo">Sorteador de números</h1>
+  </header>
+
+  <nav class="menu-navegacao" aria-label="Menu principal">
+    <a class="menu-navegacao__link menu-navegacao__link--ativo" href="index.html">Números</a>
+    <a class="menu-navegacao__link" href="sorteios/sorteio-nomes.html">Nomes</a>
+    <a class="menu-navegacao__link" href="sorteios/sorteio-equipes.html">Equipes</a>
+  </nav>
+
+  <main class="principal">
+    <noscript>
+      <p class="erro">Este sorteador precisa de JavaScript. Ative-o no navegador e recarregue a página.</p>
+    </noscript>
+
+    <!-- Tela 1: definir intervalo -->
+    <section id="telaConfig" class="config" aria-labelledby="tituloConfig">
+      <h2 id="tituloConfig" class="config__titulo">Defina o intervalo do sorteio</h2>
+      <form id="formConfig" novalidate>
+        <div class="config__campos">
+          <div class="campo">
+            <label for="inicio">Número inicial</label>
+            <input id="inicio" name="inicio" type="number" inputmode="numeric" step="1" value="1" autocomplete="off">
+          </div>
+          <div class="campo">
+            <label for="fim">Número final</label>
+            <input id="fim" name="fim" type="number" inputmode="numeric" step="1" value="100" autocomplete="off">
+          </div>
+        </div>
+        <p id="erroConfig" class="erro" role="alert"></p>
+        <button type="submit" class="botao botao--primario botao--grande">Iniciar Sorteio</button>
+      </form>
+    </section>
+
+    <!-- Tela 2: sorteio em andamento -->
+    <section id="telaSorteio" class="sorteio" hidden>
+      <div class="resultado">
+        <p class="resultado__rotulo">Número sorteado</p>
+        <p id="numeroSorteado" class="resultado__numero resultado__numero--vazio">?</p>
+        <p id="intervaloAtual" class="resultado__intervalo"></p>
+      </div>
+      <p id="anuncio" class="sr-only" aria-live="polite"></p>
+
+      <div id="mensagemFinal" class="final" role="status" hidden>
+        <p class="final__titulo">Todos os números foram sorteados!</p>
+        <p>Para começar de novo, use o botão Novo Sorteio.</p>
+      </div>
+
+      <p id="aviso" class="erro" role="status" hidden></p>
+
+      <dl class="contadores">
+        <div class="contador">
+          <dt>Números sorteados</dt>
+          <dd id="contSorteados">0</dd>
+        </div>
+        <div class="contador">
+          <dt>Números restantes</dt>
+          <dd id="contRestantes">0</dd>
+        </div>
+      </dl>
+
+      <div class="acoes">
+        <button id="botaoSortear" type="button" class="botao botao--primario botao--sortear">Sortear</button>
+        <div class="acoes__secundarias">
+          <button id="botaoNovo" type="button" class="botao botao--secundario">Novo Sorteio</button>
+          <button id="botaoLimpar" type="button" class="botao botao--discreto">Limpar Sorteio Salvo</button>
+        </div>
+      </div>
+
+      <section class="historico" aria-labelledby="tituloHistorico">
+        <h2 id="tituloHistorico" class="historico__titulo">Histórico dos sorteios</h2>
+        <p class="historico__nota">Estes números já foram utilizados e não saem de novo neste sorteio.</p>
+        <p id="historicoVazio" class="historico__vazio">Nenhum número sorteado ainda.</p>
+        <ol id="listaHistorico" class="historico__lista"></ol>
+      </section>
+    </section>
+  </main>
+
+  <footer class="rodape">
+    <p>ADTAG Avenida P1 · Sorteios da igreja</p>
+  </footer>
+
+  <dialog id="dialogo" class="dialogo" aria-labelledby="dialogoTitulo" aria-describedby="dialogoMensagem">
+    <form method="dialog">
+      <h2 id="dialogoTitulo" class="dialogo__titulo"></h2>
+      <p id="dialogoMensagem" class="dialogo__mensagem"></p>
+      <div class="dialogo__acoes">
+        <button type="submit" value="cancelar" class="botao botao--secundario">Cancelar</button>
+        <button type="submit" value="confirmar" id="dialogoConfirmar" class="botao botao--perigo">Confirmar</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="script.js"></script>
+</body>
+</html>

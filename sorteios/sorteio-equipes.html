@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sorteio de Equipes</title>
+  <style>
+    :root {
+      --tinta-900: #050505;
+      --tinta-800: #111111;
+      --tinta-700: #2a2a2a;
+      --vermelho-500: #d91616;
+      --vermelho-300: #ff4d4d;
+      --texto: #f5f5f5;
+      --texto-suave: #d4d4d4;
+      --perigo: #b31212;
+      --fonte-serifa: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+      --fonte-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--tinta-900);
+      color: var(--texto);
+      font-family: var(--fonte-sans);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .cabecalho {
+      padding: 30px 20px 10px;
+      text-align: center;
+    }
+
+    .cabecalho__titulo {
+      margin: 0;
+      font-family: var(--fonte-serifa);
+      color: var(--vermelho-300);
+      font-size: clamp(2rem, 4vw, 3rem);
+    }
+
+    .cabecalho__subtitulo {
+      margin: 8px 0 0;
+      color: var(--texto-suave);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      font-size: 0.8rem;
+    }
+
+    .menu-navegacao {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      width: min(100%, 42rem);
+      margin: 0 auto 1rem;
+      padding: 0.7rem 1rem;
+      background: rgba(17, 17, 17, 0.9);
+      border: 1px solid var(--tinta-700);
+      border-radius: 999px;
+    }
+
+    .menu-navegacao__link {
+      padding: 0.55rem 1rem;
+      border-radius: 999px;
+      color: var(--texto-suave);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .menu-navegacao__link--ativo {
+      background: var(--vermelho-500);
+      color: #fff;
+    }
+
+    .principal {
+      width: min(90%, 900px);
+      margin: 0 auto;
+      padding: 20px 0 50px;
+      flex: 1;
+    }
+
+    .cartao {
+      background: var(--tinta-800);
+      border: 1px solid var(--vermelho-500);
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 0 30px rgba(217, 22, 22, 0.12);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 20px;
+    }
+
+    textarea, input, button {
+      font: inherit;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 180px;
+      resize: vertical;
+      background: var(--tinta-900);
+      color: var(--texto);
+      border: 1px solid var(--tinta-700);
+      border-radius: 10px;
+      padding: 14px 16px;
+      font-size: 1rem;
+    }
+
+    .campo {
+      display: grid;
+      gap: 8px;
+      margin-top: 18px;
+    }
+
+    .campo label {
+      color: var(--texto-suave);
+      font-weight: 600;
+    }
+
+    .campo input {
+      background: var(--tinta-900);
+      color: var(--texto);
+      border: 1px solid var(--tinta-700);
+      border-radius: 10px;
+      min-height: 48px;
+      padding: 0 14px;
+      font-size: 1.1rem;
+    }
+
+    .botoes {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    button {
+      border: none;
+      border-radius: 10px;
+      padding: 14px 22px;
+      cursor: pointer;
+      font-weight: 700;
+      transition: transform 0.2s ease, filter 0.2s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.05);
+    }
+
+    .btn-principal {
+      background: var(--vermelho-500);
+      color: #fff;
+    }
+
+    .btn-secundario {
+      background: transparent;
+      border: 1px solid var(--tinta-700);
+      color: var(--texto);
+    }
+
+    .resultado {
+      margin-top: 22px;
+      background: var(--tinta-900);
+      border: 1px solid rgba(255, 77, 77, 0.35);
+      border-radius: 12px;
+      padding: 18px;
+      min-height: 220px;
+      overflow: hidden;
+    }
+
+    .resultado__titulo {
+      margin: 0 0 16px;
+      color: var(--vermelho-300);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-size: 0.8rem;
+    }
+
+    .equipes {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 12px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .equipe {
+      background: var(--tinta-800);
+      border: 1px solid var(--tinta-700);
+      border-radius: 10px;
+      padding: 12px;
+    }
+
+    .equipe__nome {
+      display: block;
+      color: var(--vermelho-300);
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+
+    .equipe__lista {
+      margin: 0;
+      padding-left: 18px;
+      color: var(--texto-suave);
+      line-height: 1.7;
+    }
+
+    .link-voltar {
+      display: inline-block;
+      margin-top: 20px;
+      color: var(--vermelho-300);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .link-voltar:hover { text-decoration: underline; }
+
+    @media (max-width: 700px) {
+      .grid { grid-template-columns: 1fr; }
+      .botoes { flex-direction: column; }
+      .botoes button { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <header class="cabecalho">
+    <h1 class="cabecalho__titulo">Sorteio de Equipes</h1>
+    <p class="cabecalho__subtitulo">ADTAG Avenida P1</p>
+  </header>
+
+  <main class="principal">
+    <section class="cartao">
+      <nav class="menu-navegacao" aria-label="Menu do sorteador">
+        <a class="menu-navegacao__link" href="../index.html">Números</a>
+        <a class="menu-navegacao__link" href="sorteio-nomes.html">Nomes</a>
+        <a class="menu-navegacao__link menu-navegacao__link--ativo" href="sorteio-equipes.html">Equipes</a>
+      </nav>
+
+      <div class="grid">
+        <div>
+          <label for="participantes" style="display:block; margin-bottom:10px; color: var(--texto-suave); font-weight:600;">Digite os participantes, um por linha ou separados por vírgula:</label>
+          <textarea id="participantes" placeholder="Exemplo: João, Maria, José, Ana, Pedro, Carla"></textarea>
+        </div>
+
+        <div>
+          <div class="campo">
+            <label for="quantidadeEquipes">Quantidade de equipes</label>
+            <input id="quantidadeEquipes" type="number" min="1" value="2">
+          </div>
+          <div class="botoes">
+            <button type="button" class="btn-principal" id="sortearEquipes">Sortear Equipes</button>
+            <button type="button" class="btn-secundario" id="limparEquipes">Limpar</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="resultado">
+        <p class="resultado__titulo">Distribuição</p>
+        <ul id="listaEquipes" class="equipes"></ul>
+      </div>
+
+      <a class="link-voltar" href="index.html">← Voltar para o sorteio principal</a>
+    </section>
+  </main>
+
+  <script>
+    const participantesInput = document.getElementById('participantes');
+    const qtdInput = document.getElementById('quantidadeEquipes');
+    const listaEquipes = document.getElementById('listaEquipes');
+
+    function limparListaEquipes() {
+      listaEquipes.innerHTML = '';
+    }
+
+    function extrairParticipantes(texto) {
+      return texto
+        .split(/\n|,/) 
+        .map(item => item.trim())
+        .filter(item => item.length > 0);
+    }
+
+    function embaralhar(array) {
+      const copia = [...array];
+      for (let i = copia.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copia[i], copia[j]] = [copia[j], copia[i]];
+      }
+      return copia;
+    }
+
+    function montarEquipes() {
+      const participantes = extrairParticipantes(participantesInput.value);
+      const quantidade = Number(qtdInput.value) || 1;
+
+      if (participantes.length === 0) {
+        listaEquipes.innerHTML = '<li class="equipe"><span class="equipe__nome">Atenção</span><ul class="equipe__lista"><li>Digite os participantes primeiro.</li></ul></li>';
+        return;
+      }
+
+      const participantesEmbaralhados = embaralhar(participantes);
+      const equipes = Array.from({ length: quantidade }, () => []);
+
+      participantesEmbaralhados.forEach((participante, index) => {
+        const equipeIndex = index % quantidade;
+        equipes[equipeIndex].push(participante);
+      });
+
+      listaEquipes.innerHTML = equipes
+        .map((membros, index) => {
+          const itens = membros.map(nome => `<li>${nome}</li>`).join('');
+          return `
+            <li class="equipe">
+              <span class="equipe__nome">Equipe ${index + 1}</span>
+              <ul class="equipe__lista">${itens}</ul>
+            </li>
+          `;
+        })
+        .join('');
+    }
+
+    document.getElementById('sortearEquipes').addEventListener('click', montarEquipes);
+    document.getElementById('limparEquipes').addEventListener('click', () => {
+      participantesInput.value = '';
+      qtdInput.value = 2;
+      limparListaEquipes();
+    });
+  </script>
+</body>
+</html>
